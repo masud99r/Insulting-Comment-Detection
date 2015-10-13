@@ -1,1 +1,1 @@
-# cs6316project
+Course project of cs6316 - Machine Learning
