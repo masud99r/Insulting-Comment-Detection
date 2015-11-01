@@ -6,6 +6,7 @@ from commentClass import Comment
 
 listOfComments = []
 listOfUniqueTokens = [] # unique tokens of the entire corpus
+documentFrequencyOfTokens = {}
 
 def calculateTermFrequency(tokenList):
 	dictionary = {}
@@ -27,14 +28,21 @@ if __name__ == '__main__':
 	for i in range(len(listOfComments)):
 		content = listOfComments[i].getContent()
 		status = listOfComments[i].getStatus()
+		content = fext.commentNormalizer(content)
 		tokenList = fext.commentTokenizer(content)
-		tokenList = fext.commentNormalizer(tokenList)
+		tokenList = fext.removeStopWords(tokenList)
 		tokenList = fext.commentStemmer(tokenList)
 		listOfUniqueTokens = listOfUniqueTokens + tokenList  # dictionary containing unique tokens
 
 		dicTokens = calculateTermFrequency(tokenList)
 		listOfComments[i].setTokenList(dicTokens)
 
+		for key, value in dicTokens.items():
+			if key in documentFrequencyOfTokens:
+				documentFrequencyOfTokens[key] += 1
+			else:
+				documentFrequencyOfTokens[key] = 1
+		
 		'''
 		print(listOfComments[i].getContent())
 		print('***************************')
@@ -43,4 +51,9 @@ if __name__ == '__main__':
 		'''
 
 	listOfUniqueTokens = list(set(listOfUniqueTokens))
-	print(listOfUniqueTokens)
+	print(len(listOfUniqueTokens))
+	documentFrequencyOfTokens = sorted(documentFrequencyOfTokens.items(), key=lambda x: x[1], reverse=True)
+	for i in range(len(documentFrequencyOfTokens)):
+		var = documentFrequencyOfTokens[i]
+		if var[1] > 5:
+			print(var[0], ' : ', var[1])
