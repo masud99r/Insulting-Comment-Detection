@@ -1,12 +1,13 @@
 __author__ = 'Wasi Uddin Ahmad, Md Masudur Rahman'
 
 import readData as rd
+import numpy as np
 import featureExtract as fext
 from commentClass import Comment
-
-listOfComments = []
-listOfUniqueTokens = [] # unique tokens of the entire corpus
-documentFrequencyOfTokens = {}
+from naiveBayesClassifier import MultinomialNaiveBayes
+from naiveBayesClassifier import GaussianNaiveBayes
+from naiveBayesClassifier import BernoulliNaiveBayes
+from svmClassifier import svmClassifier
 
 def calculateTermFrequency(tokenList):
 	dictionary = {}
@@ -17,43 +18,81 @@ def calculateTermFrequency(tokenList):
 		 	dictionary[tokenList[i]] = 1
 	return dictionary
 
-if __name__ == '__main__':
-	xVal, yVal = rd.loadDataSet('train.csv')
+def processTrainData(filename):
+	listOfTrainComments = []
+	listOfUniqueTokens = [] # unique tokens of the entire corpus
+	documentFrequencyOfTokens = {}
+	xVal, yVal = rd.loadDataSet(filename)
 	for i in range(xVal.shape[0]):
 		tempVal = Comment(i)
 		tempVal.setContent(xVal[i])
 		tempVal.setStatus(yVal[i])
-		listOfComments.append(tempVal)
+		listOfTrainComments.append(tempVal)
 
-	for i in range(len(listOfComments)):
-		content = listOfComments[i].getContent()
-		status = listOfComments[i].getStatus()
+	for i in range(len(listOfTrainComments)):
+		content = listOfTrainComments[i].getContent()
+		status = listOfTrainComments[i].getStatus()
 		content = fext.commentNormalizer(content)
 		tokenList = fext.commentTokenizer(content)
 		tokenList = fext.removeStopWords(tokenList)
 		tokenList = fext.commentStemmer(tokenList)
-		listOfUniqueTokens = listOfUniqueTokens + tokenList  # dictionary containing unique tokens
+		#listOfUniqueTokens = listOfUniqueTokens + tokenList  # list of unique tokens
 
 		dicTokens = calculateTermFrequency(tokenList)
-		listOfComments[i].setTokenList(dicTokens)
-
+		listOfTrainComments[i].setTokenList(dicTokens)
 		for key, value in dicTokens.items():
 			if key in documentFrequencyOfTokens:
 				documentFrequencyOfTokens[key] += 1
 			else:
 				documentFrequencyOfTokens[key] = 1
-		
-		'''
-		print(listOfComments[i].getContent())
-		print('***************************')
-		print(dicTokens)
-		print('***************************')
-		'''
 
-	listOfUniqueTokens = list(set(listOfUniqueTokens))
+	#listOfUniqueTokens = list(set(listOfUniqueTokens)) #vocabulary
+	#documentFrequencyOfTokens = sorted(documentFrequencyOfTokens.items(), key=lambda x: x[1], reverse=True)
+	for key, val in documentFrequencyOfTokens.items():
+		if val >= 10:
+			listOfUniqueTokens.append(key)
+
+	'''
+	invertedDocumentFrequencyOfTokens = {}
+	totalNumberOfDoc = len(listOfTrainComments)
+	for key, val in documentFrequencyOfTokens.items():
+		invertedDocumentFrequencyOfTokens[key] = 1 + np.log2(totalNumberOfDoc / val)
+
+	for i in range(len(listOfTrainComments)):
+		cmnt = listOfTrainComments[i]
+		tokenList = cmnt.getTokensList()
+		for key, val in tokenList.items():
+			tokenList[key] = val * invertedDocumentFrequencyOfTokens[key]
+	'''
+
 	print(len(listOfUniqueTokens))
-	documentFrequencyOfTokens = sorted(documentFrequencyOfTokens.items(), key=lambda x: x[1], reverse=True)
-	for i in range(len(documentFrequencyOfTokens)):
-		var = documentFrequencyOfTokens[i]
-		if var[1] > 5:
-			print(var[0], ' : ', var[1])
+	return (listOfTrainComments, listOfUniqueTokens)
+
+def processTestData(filename):
+	listOfTestComments = []
+	xVal, yVal = rd.loadDataSet(filename)
+	for i in range(xVal.shape[0]):
+		tempVal = Comment(i)
+		tempVal.setContent(xVal[i])
+		tempVal.setStatus(yVal[i])
+		listOfTestComments.append(tempVal)
+
+	for i in range(len(listOfTestComments)):
+		content = listOfTestComments[i].getContent()
+		status = listOfTestComments[i].getStatus()
+		content = fext.commentNormalizer(content)
+		tokenList = fext.commentTokenizer(content)
+		tokenList = fext.removeStopWords(tokenList)
+		tokenList = fext.commentStemmer(tokenList)
+		dicTokens = calculateTermFrequency(tokenList)
+		listOfTestComments[i].setTokenList(dicTokens)
+
+	return listOfTestComments
+
+if __name__ == '__main__':
+	listOfTrainComments, listOfUniqueTokens = processTrainData('train.csv')
+	listOfTestComments = processTestData('test_with_solutions.csv')
+	MultinomialNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens)
+	#BernoulliNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens)
+	#GaussianNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens)
+	#svmClassifier(listOfTrainComments, listOfTestComments, listOfUniqueTokens, 5, 0.01, 10)

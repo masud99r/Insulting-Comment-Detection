@@ -24,5 +24,5 @@ class Comment:
 	def setTokenList(self, tokenList): # sets token dictionary
 		self.list_of_tokens = tokenList
 
-	def getTokensList(): # returns token dictionary
-		return list_of_tokens
+	def getTokensList(self): # returns token dictionary
+		return self.list_of_tokens
