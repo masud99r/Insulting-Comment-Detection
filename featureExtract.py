@@ -26,9 +26,16 @@ def commentTokenizer(comment):
 	comment = removeHTMLTages(comment)
 	comment = removeBadTokens(comment)
 	tokenList = wordpunct_tokenize(comment)
-	#bi_tokens = [ " ".join(pair) for pair in bigrams(tokenList)]
-	#tokenList = tokenList + bi_tokens
 	return tokenList # returns list of tokens
+
+def convertToBigrams(tokenList):
+	bigramList = []
+	for i in range(len(tokenList)):
+		if i == 0:
+			continue
+		bigram = tokenList[i-1] + '_' + tokenList[i]
+		bigramList.append(bigram)
+	return bigramList # returns list of tokens
 
 def removeStopWords(tokenList):
 	stopwordList = np.genfromtxt('stopwords.txt',dtype='str')

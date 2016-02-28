@@ -1,0 +1,29 @@
+feature size = 300
+
+Accuracy Statistics for Linear Kernel
+C: 0.01 Train Accuracy: 75.3% Test Accuracy: 75.33%
+C: 0.1 Train Accuracy: 83.33% Test Accuracy: 80.13%
+C: 1.0 Train Accuracy: 87.28% Test Accuracy: 81.94%
+C: 10.0 Train Accuracy: 87.53% Test Accuracy: 81.34%
+C: 100.0 Train Accuracy: 87.53% Test Accuracy: 81.53%
+
+Statistics for Polynomial Kernel
+C: 0.01 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 0.1 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 1.0 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 10.0 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 100.0 Train Accuracy: 73.5% Test Accuracy: 73.78%
+
+Statistics for RBF Kernel
+C: 0.01 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 0.1 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 1.0 Train Accuracy: 74.06% Test Accuracy: 74.61%
+C: 10.0 Train Accuracy: 82.49% Test Accuracy: 79.83%
+C: 100.0 Train Accuracy: 87.03% Test Accuracy: 82.17%
+
+Statistics for Sigmoid Kernel
+C: 0.01 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 0.1 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 1.0 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 10.0 Train Accuracy: 73.42% Test Accuracy: 73.82%
+C: 100.0 Train Accuracy: 73.42% Test Accuracy: 73.82%

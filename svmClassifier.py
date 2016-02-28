@@ -15,9 +15,12 @@ def generateBOW(comment, vocabulary):
 def testModelWithHyperParameter(train_xValues, train_yValues, test_xValues, test_yValues, cValue, kernel_name):
 	clf = SVC(C=cValue,kernel=kernel_name)
 	clf.fit(train_xValues, train_yValues)
-	result1 = clf.score(train_xValues, train_yValues) * 100
-	result2 = clf.score(test_xValues, test_yValues) * 100
-	print("C: " + str(cValue), "Train Accuracy: " + str(round(result1, 2)) + "%", "Test Accuracy: " + str(round(result2, 2)) + "%")
+	trainAcc = clf.score(train_xValues, train_yValues)
+	testAcc = clf.score(test_xValues, test_yValues)
+	prediction = clf.predict(test_xValues)
+	#print("C: " + str(cValue), "Train Accuracy: " + str(round(trainAcc*100, 2)) + "%", "Test Accuracy: " + str(round(testAcc*100, 2)) + "%\n")
+	#print("SVM Classifier, Accuracy - " + str(round(testAcc, 2)) + "%")
+	return (prediction, testAcc)
 
 def svmClassifier(listOfTrainComments, listOfTestComments, listOfUniqueTokens, numItr, baseValue, mulFactor):
 	train_xValues = []
@@ -58,6 +61,23 @@ def svmClassifier(listOfTrainComments, listOfTestComments, listOfUniqueTokens, n
 		testModelWithHyperParameter(train_xValues, train_yValues, test_xValues, test_yValues, penalty_param, 'sigmoid')
 		penalty_param = penalty_param * mulFactor
 
+def svmClassifier(listOfTrainComments, listOfTestComments, listOfUniqueTokens, penalty, kernelType):
+	train_xValues = []
+	train_yValues = []
+	for i in range(len(listOfTrainComments)):
+		BOW = generateBOW(listOfTrainComments[i], listOfUniqueTokens)
+		train_xValues.append(BOW)
+		train_yValues.append(listOfTrainComments[i].getStatus())
+
+	test_xValues = []
+	test_yValues = []
+	for i in range(len(listOfTestComments)):
+		BOW = generateBOW(listOfTestComments[i], listOfUniqueTokens)
+		test_xValues.append(BOW)
+		test_yValues.append(listOfTestComments[i].getStatus())
+
+	prediction, testAcc = testModelWithHyperParameter(train_xValues, train_yValues, test_xValues, test_yValues, penalty, kernelType)
+	return (prediction, testAcc)
 
 if __name__ == '__main__':
 	pass

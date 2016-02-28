@@ -32,9 +32,11 @@ def MultinomialNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueT
 	clf = MultinomialNB()
 	clf.fit(xTrain, yTrain)
 	accUsingSklearn = clf.score(xTest, yTest)
-	print('Multinomial Naive Bayes Classifier, Accuracy - ' + str(round(accUsingSklearn*100, 2)) + '%', '\n')
+	retValue = clf.predict(xTest)
+	#print('Multinomial Naive Bayes Classifier, Accuracy - ' + str(round(accUsingSklearn*100, 2)) + '%')
+	return (yTest, retValue, accUsingSklearn)
 
-def BernoulliNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens):
+def GaussianNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens):
 	xTrain = []
 	yTrain = []
 	for i in range(len(listOfTrainComments)):
@@ -54,7 +56,7 @@ def BernoulliNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTok
 	accUsingSklearn = clf.score(xTest, yTest)
 	print('Gaussian Naive Bayes Classifier, Accuracy - ' + str(round(accUsingSklearn*100, 2)) + '%', '\n')
 	
-def GaussianNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens):
+def BernoulliNaiveBayes(listOfTrainComments, listOfTestComments, listOfUniqueTokens):
 	xTrain = []
 	yTrain = []
 	for i in range(len(listOfTrainComments)):
